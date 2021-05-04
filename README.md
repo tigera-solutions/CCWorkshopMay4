@@ -464,6 +464,54 @@ EOF
 ```
 kubectl apply -f default-deny.yaml
 ```
+# Creating a simple DNS Egress Policy
+
+You MUST create the 'platform' tier first, or policy will not apply.
+This is referenced under metadata: name:
+
+```
+cat << EOF > dns-policy.yaml
+apiVersion: projectcalico.org/v3
+kind: NetworkPolicy
+metadata:
+  name: platform.api-access
+  namespace: storefront
+spec:
+  tier: platform
+  selector: fw-zone == "internet"
+  serviceAccountSelector: ''
+  egress:
+    - action: Allow
+      protocol: TCP
+      source: {}
+      destination:
+        ports:
+          - '80'
+          - '443'
+        domains:
+          - '*.tigera.io'
+  types:
+    - Egress
+EOF
+```
+
+```
+kubectl apply -f dns-policy.yaml
+```
+
+Create a pod to test the DNS policy
+We will apply the internet firewall zone label explicitly to this pod
+
+```
+kubectl run -it --rm --image ubuntu nigelpod debug -n storefront -l fw-zone=internet -- bash
+```
+
+Verify the DNS egress rule inside the pod
+
+```
+curl https://www.tigera.io
+curl https://docs.projectcalico.org
+```
 
 # Compliance Reporting
 
