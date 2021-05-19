@@ -209,7 +209,7 @@ EOF
 As always, don't forget to add the feed to your cluster.
 
 ```
-kubectl apply -f feodo-tracker.yaml.yaml
+kubectl apply -f feodo-tracker.yaml
 ```
 
 This pulls updates using the default period of once per day. 
