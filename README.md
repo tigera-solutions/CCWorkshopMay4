@@ -282,6 +282,22 @@ kubectl get globalnetworksets threatfeed.feodo-tracker -o yaml
 # Build a policy based on the threat feed
 
 We will start by creating a tier called 'security'.
+
+```
+cat << EOF > security.yaml
+apiVersion: projectcalico.org/v3
+kind: Tier
+metadata:
+  name: security
+spec:
+  order: 600
+EOF  
+```
+
+```
+kubectl apply -f security.yaml
+```
+
 Notice how the below 'block-feodo' policy is related to the 'security' tier - name: security.block-feodo
 
 ```
@@ -560,4 +576,13 @@ To view the status of a report, you must use the kubectl command. For example:
 
 ```
 kubectl get globalreports.projectcalico.org daily-cis-results -o yaml
+```
+
+A quick way to build these reports is from pre-configured examples:
+
+```
+kubectl apply -f https://raw.githubusercontent.com/xxradar/app_routable_demo/v1.0/calico_ee/globalreport/hourly-networkaccess-report.yaml
+```
+```
+kubectl apply -f https://raw.githubusercontent.com/xxradar/app_routable_demo/v1.0/calico_ee/globalreport/hourly-inventory-report.yaml
 ```
