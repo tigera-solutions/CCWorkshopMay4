@@ -216,39 +216,7 @@ This pulls updates using the default period of once per day.
 See the Global Resource Threat Feed API for all configuration options:
 https://docs.tigera.io/reference/resources/globalthreatfeed
 
-# Block pods from contacting IPs
-
-Start by creating a generic 'shellpods' namespace.
-```
-kubectl create namespace shellpods
-```
-
-In this demo, we will apply the policy only to a test workload (so we do not impact other traffic).
-Create a file called tf-ubuntu.yaml with the following contents:
-
-```
-cat << EOF > tf-ubuntu.yaml
-apiVersion: v1
-kind: Pod
-metadata:
-  labels:
-    docs.tigera.io/tutorial: threat-feed
-  name: tf-ubuntu
-spec:
-  nodeSelector:
-    kubernetes.io/os: linux
-  containers:
-  - command:
-    - sleep
-    - "3600"
-    image: ubuntu
-    name: test
-EOF
-```
-
-```
-kubectl apply -f tf-ubuntu.yaml -n shellpods
-```
+# Creating a GlobalNetworkSet
 
 Edit the feodo-tracker.yaml to include a globalNetworkSet stanza:
 
